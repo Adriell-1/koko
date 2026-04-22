@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alerts</title>
+
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d26;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --green: #00c853;
+  --red: #ff3d00;
+  --yellow: #ffab00;
+  --blue: #3b82f6;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #0c0e13;
+  padding: 20px;
+  height: 100vh;
+}
+
+.nav-item {
+  padding: 10px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background: rgba(255,106,0,0.2);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Filters */
+.filters {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--muted);
+}
+
+.filter-btn.active {
+  background: var(--red);
+  color: white;
+}
+
+/* Alert cards */
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 4px solid transparent;
+}
+.alert {
+  transition: all 0.3s ease;
+}
+
+.alert h4 {
+  margin: 0;
+}
+
+.alert small {
+  color: var(--muted);
+}
+
+/* Severity styles */
+.critical {
+  border-left-color: var(--red);
+}
+
+.warning {
+  border-left-color: var(--yellow);
+}
+
+.info {
+  border-left-color: var(--blue);
+}
+
+/* Status tag */
+.tag {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.tag.red { background: rgba(255,61,0,0.2); }
+.tag.yellow { background: rgba(255,171,0,0.2); }
+.tag.blue { background: rgba(59,130,246,0.2); }
+
+</style>
+</head>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const buttons = document.querySelectorAll(".filter-btn");
+  const alerts = document.querySelectorAll(".alert");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", function () {
+
+      // active state
+      buttons.forEach(btn => btn.classList.remove("active"));
+      this.classList.add("active");
+
+      const filter = this.textContent.trim().toLowerCase();
+
+      alerts.forEach(alert => {
+        if (filter === "all") {
+          alert.style.display = "block";
+        } else {
+          if (alert.classList.contains(filter)) {
+            alert.style.display = "block";
+          } else {
+            alert.style.display = "none";
+          }
+        }
+      });
+
+    });
+  });
+
+});
+</script>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>GYM.EMS</h2>
+  <div class="nav-item" onclick="location.href='dashboard.html'">Overview</div>
+  <div class="nav-item" onclick="location.href='equipment.html'">Equipment Status</div>
+  <div class="nav-item" onclick="location.href='floor-map.html'">Floor Map</div>
+  <div class="nav-item active">Alerts</div>
+  <div class="nav-item" onclick="location.href='settings.html'">Settings</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <div class="header">
+    <div>
+      <h1>System Alerts</h1>
+      <small>Real-time equipment and safety notifications</small>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Critical</button>
+    <button class="filter-btn">Warning</button>
+    <button class="filter-btn">Info</button>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert-list">
+
+    <div class="alert critical">
+      <h4>Treadmill TRD-04 overheating</h4>
+      <small>Cardio Zone • 2 minutes ago</small><br>
+      <span class="tag red">Critical</span>
+    </div>
+
+    <div class="alert warning">
+      <h4>Elliptical E-12 maintenance due</h4>
+      <small>Machines Zone • 15 minutes ago</small><br>
+      <span class="tag yellow">Warning</span>
+    </div>
+
+    <div class="alert info">
+      <h4>New equipment added: Spin Bike B-22</h4>
+      <small>Cardio Zone • 1 hour ago</small><br>
+      <span class="tag blue">Info</span>
+    </div>
+
+    <div class="alert warning">
+      <h4>Cable Station CBL-02 usage spike detected</h4>
+      <small>Weights Zone • 2 hours ago</small><br>
+      <span class="tag yellow">Warning</span>
+    </div>
+
+    <div class="alert critical">
+      <h4>Safety lock triggered on TRD-01</h4>
+      <small>Cardio Zone • 3 hours ago</small><br>
+      <span class="tag red">Critical</span>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

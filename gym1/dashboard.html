@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitFlow Admin Dashboard</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d26;
+  --accent: #ff6a00;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --green: #00c853;
+  --red: #ff3d00;
+  --yellow: #ffab00;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #0c0e13;
+  padding: 20px;
+  height: 100vh;
+}
+
+.sidebar h2 {
+  color: white;
+  margin-bottom: 30px;
+}
+
+.nav-item {
+  padding: 10px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background: rgba(255,106,0,0.2);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  background: var(--accent);
+  border: none;
+  padding: 8px 14px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.card {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.card small {
+  color: var(--muted);
+}
+
+.card h2 {
+  margin-top: 10px;
+}
+
+/* Charts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 15px;
+}
+
+.chart {
+  height: 250px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 15px;
+}
+
+
+/* Bottom layout */
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Alerts */
+.alert {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.alert.red { background: rgba(255,61,0,0.15); }
+.alert.yellow { background: rgba(255,171,0,0.15); }
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.green { background: rgba(0,200,83,0.2); }
+.gray { background: rgba(255,255,255,0.1); }
+.red { background: rgba(255,61,0,0.2); }
+
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>GYM.EMS</h2>
+  <div class="nav-item active">Overview</div>
+  <div class="nav-item" onclick="location.href='equipment.html'">Equipment Status</div>
+  <div class="nav-item" onclick="location.href='floor-map.html'">Floor Map</div>  
+  <div class="nav-item" onclick="location.href='alerts.html'">Alerts</div>
+  <div class="nav-item" onclick="location.href='settings.html'">Settings</div>
+</div>
+
+<div class="main">
+
+  <div class="header">
+    <div>
+      <h1>Equipment Overview</h1>
+      <small>Real-time status of all gymnasium assets</small>
+    </div>
+    <button class="button">Export Report</button>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards">
+    <div class="card">
+      <small>Total Equipment</small>
+      <h2>142</h2>
+    </div>
+    <div class="card">
+      <small>Currently Active</small>
+      <h2>87</h2>
+    </div>
+    <div class="card">
+      <small>Maintenance Alerts</small>
+      <h2>03</h2>
+    </div>
+    <div class="card">
+      <small>Avg Daily Load</small>
+      <h2>64%</h2>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="grid-2">
+    <div class="chart">
+  <canvas id="lineChart"></canvas>
+</div>
+    <div class="chart">
+  <canvas id="donutChart"></canvas>
+</div>
+
+  <!-- Bottom -->
+  <div class="grid-3">
+
+    <!-- Alerts -->
+    <div class="card">
+      <h3>Active Alerts</h3>
+
+      <div class="alert red">
+        <strong>Treadmill T-04</strong><br>
+        Motor temperature high
+      </div>
+
+      <div class="alert yellow">
+        <strong>Elliptical E-12</strong><br>
+        Maintenance due
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <h3>Live Equipment Status</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Load</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>TRD-01</td>
+            <td>Treadmill</td>
+            <td><span class="status green">In Use</span></td>
+            <td>6.5 mph</td>
+          </tr>
+          <tr>
+            <td>BIK-04</td>
+            <td>Spin Bike</td>
+            <td><span class="status gray">Idle</span></td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>CBL-02</td>
+            <td>Cable Station</td>
+            <td><span class="status green">In Use</span></td>
+            <td>85 lbs</td>
+          </tr>
+          <tr>
+            <td>TRD-04</td>
+            <td>Treadmill</td>
+            <td><span class="status red">Error</span></td>
+            <td>Motor Temp High</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// LINE CHART
+const lineCtx = document.getElementById('lineChart');
+
+new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: ['6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm'],
+    datasets: [{
+      label: 'Utilization %',
+      data: [20, 50, 80, 65, 40, 75, 95, 60, 25],
+      borderColor: '#ff6a00',
+      backgroundColor: 'rgba(255,106,0,0.1)',
+      tension: 0.4,
+      fill: true,
+      pointRadius: 3
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#9aa0a6' },
+        grid: { display: false }
+      },
+      y: {
+        ticks: { color: '#9aa0a6' },
+        grid: { color: 'rgba(255,255,255,0.05)' }
+      }
+    }
+  }
+});
+
+
+// DONUT CHART
+const donutCtx = document.getElementById('donutChart');
+
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Cardio Deck', 'Free Weights', 'Machines'],
+    datasets: [{
+      data: [45, 30, 25],
+      backgroundColor: ['#ff6a00', '#3b82f6', '#facc15'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        labels: {
+          color: '#e6e6e6'
+        }
+      }
+    },
+    cutout: '70%'
+  }
+});
+</script>
+</body>
+</html>

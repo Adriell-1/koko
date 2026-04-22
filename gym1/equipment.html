@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment Status</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d26;
+  --accent: #ff6a00;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --green: #00c853;
+  --red: #ff3d00;
+  --yellow: #ffab00;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #0c0e13;
+  padding: 20px;
+  height: 100vh;
+}
+
+.nav-item {
+  padding: 10px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background: rgba(255,106,0,0.2);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background: var(--card);
+  color: white;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.card {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+}
+
+tr {
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Status badges */
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.green { background: rgba(0,200,83,0.2); }
+.gray { background: rgba(255,255,255,0.1); }
+.red { background: rgba(255,61,0,0.2); }
+.yellow { background: rgba(255,171,0,0.2); }
+
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>GYM.EMS</h2>
+  <div class="nav-item" onclick="location.href='dashboard.html'">Overview</div>
+  <div class="nav-item active">Equipment Status</div>
+  <div class="nav-item" onclick="location.href='floor-map.html'">Floor Map</div>
+  <div class="nav-item" onclick="location.href='alerts.html'">Alerts</div>
+  <div class="nav-item" onclick="location.href='settings.html'">Settings</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>Equipment Status</h1>
+      <small>Monitor all gym equipment in real-time</small>
+    </div>
+
+    <input class="search" placeholder="Search equipment...">
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="cards">
+    <div class="card">
+      <small>Total Equipment</small>
+      <h2>142</h2>
+    </div>
+
+    <div class="card">
+      <small>In Use</small>
+      <h2 style="color: var(--green)">87</h2>
+    </div>
+
+    <div class="card">
+      <small>Idle</small>
+      <h2 style="color: var(--yellow)">40</h2>
+    </div>
+
+    <div class="card">
+      <small>Errors</small>
+      <h2 style="color: var(--red)">15</h2>
+    </div>
+  </div>
+
+  <!-- Equipment Table -->
+  <div class="card">
+    <h3>All Equipment</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Zone</th>
+          <th>Status</th>
+          <th>Usage</th>
+          <th>Last Maintenance</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>TRD-01</td>
+          <td>Treadmill</td>
+          <td>Cardio</td>
+          <td><span class="status green">In Use</span></td>
+          <td>6.5 mph</td>
+          <td>2 days ago</td>
+        </tr>
+
+        <tr>
+          <td>BIK-04</td>
+          <td>Spin Bike</td>
+          <td>Cardio</td>
+          <td><span class="status gray">Idle</span></td>
+          <td>-</td>
+          <td>5 days ago</td>
+        </tr>
+
+        <tr>
+          <td>CBL-02</td>
+          <td>Cable Station</td>
+          <td>Weights</td>
+          <td><span class="status green">In Use</span></td>
+          <td>85 lbs</td>
+          <td>1 week ago</td>
+        </tr>
+
+        <tr>
+          <td>TRD-04</td>
+          <td>Treadmill</td>
+          <td>Cardio</td>
+          <td><span class="status red">Error</span></td>
+          <td>Motor Temp High</td>
+          <td>Overdue</td>
+        </tr>
+
+        <tr>
+          <td>ELP-12</td>
+          <td>Elliptical</td>
+          <td>Machines</td>
+          <td><span class="status yellow">Maintenance</span></td>
+          <td>-</td>
+          <td>Due</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+</body>
+</html>

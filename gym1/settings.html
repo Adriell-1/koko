@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings</title>
+
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d26;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --accent: #ff6a00;
+  --green: #00c853;
+  --red: #ff3d00;
+  --yellow: #ffab00;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #0c0e13;
+  padding: 20px;
+  height: 100vh;
+}
+
+.nav-item {
+  padding: 10px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background: rgba(255,106,0,0.2);
+  color: white;
+  border-radius: 8px;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+/* Layout */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+/* Form elements */
+label {
+  font-size: 12px;
+  color: var(--muted);
+  display: block;
+  margin-top: 10px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  background: #0c0e13;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: white;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Switch */
+.switch {
+  width: 40px;
+  height: 20px;
+  background: #333;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.switch::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch.active {
+  background: var(--green);
+}
+
+.switch.active::after {
+  left: 22px;
+}
+
+/* Save button */
+.button {
+  margin-top: 15px;
+  background: var(--accent);
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+</style>
+<script>
+// LOAD DATA
+window.onload = function() {
+  fetch("http://localhost:3000/load")
+    .then(res => res.json())
+    .then(data => {
+      if (!data) return;
+
+      document.getElementById("name").value = data.name || "";
+      document.getElementById("email").value = data.email || "";
+      document.getElementById("role").value = data.role || "";
+
+      document.getElementById("refresh").value = data.refresh_rate || 5;
+      document.getElementById("sensitivity").value = data.sensitivity || "Medium";
+
+      document.getElementById("speed").value = data.speed || 12;
+      document.getElementById("temp").value = data.temp || 80;
+      document.getElementById("load").value = data.load_capacity || 90;
+    });
+};
+
+// SAVE ALL
+function saveAll() {
+  const data = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    role: document.getElementById("role").value,
+    refresh: document.getElementById("refresh").value,
+    sensitivity: document.getElementById("sensitivity").value,
+    speed: document.getElementById("speed").value,
+    temp: document.getElementById("temp").value,
+    load: document.getElementById("load").value
+  };
+
+  fetch("http://localhost:3000/save", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(() => alert("Saved to MySQL!"));
+}
+</script>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>GYM.EMS</h2>
+  <div class="nav-item" onclick="location.href='dashboard.html'">Overview</div>
+  <div class="nav-item" onclick="location.href='equipment.html'">Equipment Status</div>
+  <div class="nav-item" onclick="location.href='floor-map.html'">Floor Map</div>
+  <div class="nav-item" onclick="location.href='alerts.html'">Alerts</div>
+  <div class="nav-item active">Settings</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <div class="header">
+    <h1>Settings</h1>
+    <small>System configuration & preferences</small>
+  </div>
+
+  <div class="grid">
+
+    <!-- Profile -->
+    <div class="card">
+      <h3>Profile</h3>
+
+      <label>Name</label>
+      <input type="text" value="Admin User">
+
+      <label>Email</label>
+      <input type="email" value="admin@fitflow.com">
+
+      <label>Role</label>
+      <select>
+        <option>Administrator</option>
+        <option>Manager</option>
+        <option>Operator</option>
+      </select>
+
+      <button class="button" onclick="saveProfile()">Save Profile</button>
+    </div>
+
+    <!-- System -->
+    <div class="card">
+      <h3>System Settings</h3>
+
+      <label>Data Refresh Rate (sec)</label>
+      <input type="number" value="5">
+
+      <label>Alert Sensitivity</label>
+      <select>
+        <option>High</option>
+        <option selected>Medium</option>
+        <option>Low</option>
+      </select>
+
+      <div class="toggle">
+        <span>Auto Maintenance Alerts</span>
+        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+      </div>
+
+      <div class="toggle">
+        <span>Real-time Monitoring</span>
+        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+      </div>
+
+      <button class="button" onclick="saveAll()">Save</button>
+    </div>
+
+    <!-- Notifications -->
+    <div class="card">
+      <h3>Notifications</h3>
+
+      <div class="toggle">
+        <span>Email Alerts</span>
+        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+      </div>
+
+      <div class="toggle">
+        <span>SMS Alerts</span>
+        <div class="switch" onclick="this.classList.toggle('active')"></div>
+      </div>
+
+      <div class="toggle">
+        <span>Push Notifications</span>
+        <div class="switch active" onclick="this.classList.toggle('active')"></div>
+      </div>
+
+      <button class="button" onclick="saveAll()">Save</button>
+    </div>
+
+    <!-- Safety -->
+    <div class="card">
+      <h3>Safety Thresholds</h3>
+
+      <label>Treadmill Max Speed (mph)</label>
+      <input type="number" value="12">
+
+      <label>Motor Temp Limit (°C)</label>
+      <input type="number" value="80">
+
+      <label>Load Capacity Warning (%)</label>
+      <input type="number" value="90">
+
+      <button class="button" onclick="saveAll()">Save Safety Settings</button>
+    </div>
+
+  </div>
+
+</div>
+<script>
+function saveProfile() {
+  fetch("save-profile.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      name: name.value,
+      email: email.value,
+      role: role.value
+    })
+  })
+  .then(res => res.text())
+  .then(data => alert(data));
+}
+</script>
+
+</body>
+</html>
